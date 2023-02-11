@@ -80,7 +80,7 @@ if ($offline == true){
         <style>
             @font-face {
                 font-family: 'NotoEmoji';
-                src: url('./fonts/NotoEmoji-Medium.ttf')
+                src: url('./fonts/NotoEmoji-Regular.ttf')
             }
             span {
                 display: inline-block;
