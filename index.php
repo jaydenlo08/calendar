@@ -79,15 +79,15 @@ if ($offline == true){
         <link rel="icon" href="data:;base64,=">
         <style>
             @font-face {
-                font-family: 'NotoEmoji';
-                src: url('./fonts/NotoEmoji-Medium.ttf')
+                font-family: 'NotoColorEmoji';
+                src: url('./fonts/NotoColorEmoji-Regular.ttf')
             }
             span {
                 display: inline-block;
             }
             body {
                 font-size: 40px;
-                font-family: Arial, Helvetica, sans-serif, 'NotoEmoji';
+                font-family: Arial, Helvetica, sans-serif, 'NotoColorEmoji';
                 margin: 0px;
             }
             .event {
@@ -155,7 +155,7 @@ if ($offline == true){
                 border: 1px solid black;
             }
             .emoji {
-                font-family: 'NotoEmoji';
+                font-family: 'NotoColorEmoji';
             }
             /* The Modal (background) */
             #modal {
