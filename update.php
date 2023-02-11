@@ -16,6 +16,9 @@ error_reporting(E_ALL);
 require_once './config.php';
 include './config.user.php';
 
+if (!file_exists('calendars')) {
+    mkdir('calendars', true);
+}
 foreach ($remote_urls as $remote_url_key => $remote_url) {
     $iCalendar = file_get_contents($remote_url, false) or die("Unable to get contents from remote server");
     $file = fopen('calendars/' . $remote_url_key . ".ics", "w") or die("Unable to open local file");
