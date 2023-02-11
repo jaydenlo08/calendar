@@ -6,24 +6,11 @@
  * Optimised for e-ink display
  * Built for Kindle Browser
  * 
- * Original Purpose:
- * My Matron locks all laptops into the Prep Room
- * during sports time so when the sport session
- * starts early or ends late I would not be able to
- * check my schedule for the time. It was very annoying
- * and I have to fetch the matron every time it
- * happens. So I built a web app to show my schedule
- * and started this project.
- * 
  * @package   JCalendar
  * @author    Jayden Lo
  * @copyright 2022 Jayden Lo
  * @version 2.0
  */
-
-// Input
-$offline = true; // Offline mode
-// Remote urls of calendars
 
 // Initialise
 date_default_timezone_set('Europe/London'); // Set time zone
