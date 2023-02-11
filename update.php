@@ -17,7 +17,7 @@ require_once './config.php';
 include './config.user.php';
 
 if (!file_exists('calendars')) {
-    mkdir('calendars', true);
+    mkdir('calendars', 0777, true);
 }
 foreach ($remote_urls as $remote_url_key => $remote_url) {
     $iCalendar = file_get_contents($remote_url, false) or die("Unable to get contents from remote server");
