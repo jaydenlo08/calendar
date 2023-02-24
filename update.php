@@ -20,7 +20,7 @@ if (!file_exists('calendars')) {
     mkdir('calendars', 0777, true);
 }
 foreach ($remote_urls as $remote_url_key => $remote_url) {
-    $iCalendar = file_get_contents($remote_url, false) or die("Unable to get contents from remote server");
+    $iCalendar = file_get_contents($remote_url, false, stream_context_create(["ssl"=>array("verify_peer" => false, "verify_peer_name" => false)])) or die("Unable to get contents from remote server");
     $file = fopen('calendars/' . $remote_url_key . ".ics", "w") or die("Unable to open local file");
     fwrite($file, $iCalendar) or die("Unable to write local file");
     fclose($file) or die("Unable to close local file");
