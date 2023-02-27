@@ -12,6 +12,6 @@
 $offline = false; // Offline mode
 $remote_urls = array(
     'holidays' => 'https://calendar.google.com/calendar/ical/en-gb.uk%23holiday%40group.v.calendar.google.com/public/basic.ics',
-    'astronomy' => 'http://cantonbecker.com/astronomy-calendar/astrocal.ics',
+    'astronomy' => 'https://raw.githubusercontent.com/kroeliebuschie/AstroCalendar/master/AstroCalendar.ics',
 );
 ?>
