@@ -38,8 +38,8 @@ function validateDate($date, $format = 'Y-m-d') {
     return $d && $d->format($format) === $date;
 }
 function compareByTimeStamp($time1, $time2){
-    $start1 = $time1['DTSTART']->format('Hi');
-    $start2 = $time2['DTSTART']->format('Hi');
+    $start1 = $time1['DTSTART']?->format('Hi');
+    $start2 = $time2['DTSTART']?->format('Hi');
     if ($start1 > $start2)
         return 1;
     else if ($start1 < $start2) 
@@ -349,7 +349,7 @@ if ($offline == true){
                 <?php
                 $events = array();
                 foreach ($remote_urls as $remote_url_key => $remote_url) {
-                    $iCalendar = file_get_contents($remote_url, false) or throw new Exception("Unable to get calendar contents from server");
+                    $iCalendar = file_get_contents($remote_url, false, stream_context_create(["ssl"=>array("verify_peer" => false, "verify_peer_name" => false)])) or throw new Exception("Unable to get calendar contents from server");
                     $IcalParser = new IcalParser;
                     $results = $IcalParser->parseString($iCalendar);
                     $events = array_merge($events, (array) $IcalParser->getEvents()->sorted());
@@ -358,34 +358,34 @@ if ($offline == true){
 
                 // Display events
                 foreach ($events as $event) {    // If event is overlapping this week
-                    if (($event['DTSTART']->format('Ymd') <= $weekEnd->format('Ymd')) &&
-                    ($event['DTEND']->format('Ymd') >= $weekStart->format('Ymd'))) {
+                    if (($event['DTSTART']?->format('Ymd') <= $weekEnd?->format('Ymd')) &&
+                    ($event['DTEND']?->format('Ymd') >= $weekStart->format('Ymd'))) {
                         $summary = (isset($event['SUMMARY'])) ? $event['SUMMARY'] : 'Untitled Event';
                         $location = (isset($event['LOCATION'])) ? $event['LOCATION'] : NULL;
                         $class = '';
                         $description = (!empty($event['DESCRIPTION'])) ? "showDescription('" . $event['SUMMARY'] . "', '" . str_replace("\n", '&#92n', addslashes($event['DESCRIPTION'])) . "')" : '';
 
                         if ($event['DTSTART']->diff($event['DTEND'])->format("%a") >= 1) {
-                            if (($event['DTSTART']->format('Hi') == '0000') && ($event['DTEND']->format('Hi') == '0000')) {
+                            if (($event['DTSTART']?->format('Hi') == '0000') && ($event['DTEND']?->format('Hi') == '0000')) {
                                 $event['DTEND']->modify('-1 second');
                             }
 
                             if ($event['DTSTART']->diff($event['DTEND'])->format("%a") >= 1) {
                                 // Multiple days
-                                if ($event['DTSTART']->format('Ym') == $event['DTEND']->format('Ym')) {
+                                if ($event['DTSTART']?->format('Ym') == $event['DTEND']?->format('Ym')) {
                                     // Same month --> 1 - 31 January
-                                    $time = $event['DTSTART']->format('j') . ' - ' . $event['DTEND']->format('j F');
+                                    $time = $event['DTSTART']?->format('j') . ' - ' . $event['DTEND']?->format('j F');
                                 } else {
                                     // Different months --> 1 January - 1 February
-                                    $time = $event['DTSTART']->format('j F') . ' - ' . $event['DTEND']->format('j F');
+                                    $time = $event['DTSTART']?->format('j F') . ' - ' . $event['DTEND']?->format('j F');
                                 }
                             } elseif ($event['DTSTART']->diff($event['DTEND'])->format("%a") == 0) {
                                 // 1 full day --> 1 January
-                                $time = $event['DTSTART']->format('j F');
+                                $time = $event['DTSTART']?->format('j F');
                             }
                         } else {
                             // Single day --> 12:00-13:00
-                            $time = $event['DTSTART']->format('H:i') . ' - ' . $event['DTEND']->format('H:i');
+                            $time = $event['DTSTART']?->format('H:i') . ' - ' . $event['DTEND']?->format('H:i');
                         }
                         printf('
                         <div style="display: none" class="event" data-start="%s"
@@ -393,7 +393,7 @@ if ($offline == true){
                             <span class="summary">%s</span>
                             <span class="time">%s</span>
                             <span class="location">%s</span>
-                        </div>', $event['DTSTART']->format('Y-m-d'), $event['DTEND']->format('Y-m-d'), $description, $summary, $time, $location);
+                        </div>', $event['DTSTART']?->format('Y-m-d'), $event['DTEND']?->format('Y-m-d'), $description, $summary, $time, $location);
                     }
                 }
                 ?>
