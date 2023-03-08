@@ -5,9 +5,11 @@ header('Content-type: text/plain; charset=utf-8');
 // Set the timezone
 $timezone = 'Europe/London'; date_default_timezone_set($timezone);
 // Location
-$latitude = 52.4808;
-$longitude = -0.4688;
-$city = 'Oundle';
+if (isset($_GET['city'])) {
+    $city = $_GET['city'];
+} else {
+    exit;
+}
 // Start & end date
 $startDate = new DateTime();
 $endDate = new DateTime('+7 Days');
@@ -87,22 +89,19 @@ function WWToDesc($ww) {
 BEGIN:VCALENDAR
 VERSION:2.0
 PRODID:-//jaydenlo08/JCalendar//EN
-X-WR-CALNAME: Weather
-X-APPLE-CALENDAR-COLOR:#000099
+X-WR-CALNAME:Weather in <?=$city .'
+'?>
+X-APPLE-CALENDAR-COLOR:#149EDC
 CALSCALE:GREGORIAN
 <?php
 // Download data
 if (@fsockopen("api.open-meteo.com", 443)) {
-    $string = file_get_contents("https://api.open-meteo.com/v1/forecast?latitude=" . $latitude .
-                                "&longitude=" . $longitude .
+    $geoCoder = json_decode(file_get_contents("https://geocoding-api.open-meteo.com/v1/search?count=1&name=$city"), true);
+    $weather = json_decode(file_get_contents("https://api.open-meteo.com/v1/forecast?latitude=" . $geoCoder['results'][0]["latitude"] .
+                                "&longitude=" . $geoCoder['results'][0]["longitude"] .
                                 "&daily=weathercode,temperature_2m_max,temperature_2m_min,sunrise,sunset,windspeed_10m_max,winddirection_10m_dominant&timezone=" . $timezone .
                                 "&start_date=" . $startDate->format('Y-m-d') .
-                                "&end_date=" . $endDate->format('Y-m-d'), false,
-                                stream_context_create(["ssl"=>array("verify_peer" => false, "verify_peer_name" => false)]));
-    $weather = json_decode($string, true);
-} else if (file_exists('./forecast.json')) {
-    $string = file_get_contents("http://localhost/calendars/forecast.json");
-    $weather = json_decode($string, true);
+                                "&end_date=" . $endDate->format('Y-m-d')), true);
 } else {
     exit;
 }
@@ -111,18 +110,16 @@ if (@fsockopen("api.open-meteo.com", 443)) {
 for ($i = 0; $i < count($weather['daily']['time']); $i++) {
     $directions = array('N', 'NNE', 'NE', 'ENE', 'E', 'ESE', 'SE', 'SSE', 'S', 'SSW', 'SW', 'WSW', 'W', 'WNW', 'NW', 'NNW', 'N');
     $directionIcons = array('↑', '↗', '→', '↘', '↓', '↙', '←', '↖', '↑');
-    $description = WWToDesc($weather['daily']['weathercode'][$i]) . '\n' .
-                   'Sunrise: ' . date('H:i', strtotime($weather['daily']['sunrise'][$i])) . '\n' .
-                   'Sunset: ' . date('H:i', strtotime($weather['daily']['sunset'][$i])) . '\n' .
-                   'Wind Speed: ' . $weather['daily']['windspeed_10m_max'][$i] . '\n' .
-                   'Wind Direction: ' . $directionIcons[round($weather['daily']['winddirection_10m_dominant'][$i] / 45)] . ' ' .
+    $description = WWToIcon($weather['daily']['weathercode'][$i]) . ' ' . WWToDesc($weather['daily']['weathercode'][$i]) . '\n' .
+                   '🌅 Sunrise: ' . date('H:i', strtotime($weather['daily']['sunrise'][$i])) . '\n' .
+                   '🌇 Sunset: ' . date('H:i', strtotime($weather['daily']['sunset'][$i])) . '\n' .
+                   '💨 Wind Speed: ' . $weather['daily']['windspeed_10m_max'][$i] . '\n' .
+                   '🚩 Wind Direction: ' . $directionIcons[round($weather['daily']['winddirection_10m_dominant'][$i] / 45)] . ' ' .
                                         $directions[round($weather['daily']['winddirection_10m_dominant'][$i] / 22.5)];
 ?>
 BEGIN:VEVENT
 SUMMARY:<?= WWToIcon($weather['daily']['weathercode'][$i]) . round($weather['daily']['temperature_2m_max'][$i]) ?>°/<?= round($weather['daily']['temperature_2m_min'][$i]) ?>°
 CONTACT:Jayden Lo
-LOCATION:<?= $city . '
-' ?>
 UID:<?= dateToCal($weather['daily']['time'][$i]) ?>@jaydenlo08
 DTSTAMP;VALUE=DATE:<?= dateToCal() . '
 ' ?>
