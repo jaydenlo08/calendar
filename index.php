@@ -76,19 +76,18 @@ if ($offline == true){
 <html>
     <head>
         <title>Calendar</title>
-        <link rel="icon" href="data:;base64,=">
         <style>
             @font-face {
                 font-family: 'NotoEmoji';
                 src: url('./fonts/NotoEmoji-Regular.ttf')
             }
-            span {
-                display: inline-block;
-            }
             body {
                 font-size: 40px;
                 font-family: Arial, Helvetica, sans-serif, 'NotoEmoji';
                 margin: 0px;
+            }
+            svg {
+                vertical-align: middle;
             }
             .event {
                 border: 2px solid black;
@@ -112,39 +111,24 @@ if ($offline == true){
             #header {
                 text-align: center;
                 padding: 20px;
-                position: relative;
-                height: 75px;
             }
             #date-title {
                 font-size: 75px;
-                position: absolute;
-                height: 75px;
                 line-height: 75px;
-                top: 0;
-                left: 0;
-                bottom: 0;
-                right: 0;
-                margin: auto;
             }
             .navigation {
                 border-radius: 12px;
                 border: none;
                 background-color: transparent;
                 width: 100px;
-                height: 100px;
-                transition-duration: 0.4s;
                 margin: auto;
-                position: absolute;
-                top: 0;
-                bottom: 0;
+                line-height: 75px;
             }
             .navigation:hover {
-                background-color: lightgrey;
                 cursor: pointer;
             }
             .navigation:focus {
                 outline:0;
-                background-color: lightgrey;
             }
             .navigationIcon {
                 width: 100%;
@@ -153,6 +137,7 @@ if ($offline == true){
             #header-divider {
                 margin: 0px;
                 border: 1px solid black;
+                width: 100%;
             }
             .emoji {
                 font-family: 'NotoEmoji';
@@ -224,12 +209,12 @@ if ($offline == true){
         <div id="content">
             <!-- Header: navigation & date -->
             <div id="header">
-                <div id="date-title" alt="Date"></div>
-                <button class="navigation" id="nextDay" onclick="changeDay('next')" style="right: 20px" alt="Next day">
-                    <svg fill="currentColor" width="27.439884" height="46.538464" viewBox="0 0 6.5855722 11.169231" class="material-design-icon__svg" version="1.1" id="svg4" xmlns="http://www.w3.org/2000/svg" xmlns:svg="http://www.w3.org/2000/svg"><path id="rect339" style="fill:#000000;stroke-width:0.24" d="m 6.2929489,6.2862962 c 0.02363,-0.02363 0.04552,-0.04831 0.06629,-0.07358 0.301771,-0.367127 0.301784,-0.895728 0,-1.262848 -0.01004,-0.01221 -0.02012,-0.02429 -0.03082,-0.03613 -7.37e-4,-8.21e-4 -0.0016,-0.0015 -0.0023,-0.0023 -0.01076,-0.01183 -0.02172,-0.02371 -0.03315,-0.03514 -4.44e-4,-4.43e-4 -8.82e-4,-8.83e-4 -0.0013,-0.0013 -4.4e-4,-4.41e-4 -8.85e-4,-8.84e-4 -0.0013,-0.0013 L 1.7105569,0.29396606 c -0.3919545,-0.391955 -1.02336346,-0.391955 -1.41531846,0 -0.391954,0.391955 -0.391623,1.02303204 3.32e-4,1.41498704 L 4.1729546,5.5862612 0.29292794,9.4662882 c -0.39057,0.39057 -0.390571,1.0194458 -10e-7,1.4100148 0.390569,0.39057 1.01944596,0.390569 1.41001546,0 L 6.2902969,6.2889482 Z" /></svg>
-                </button>
-                <button class='navigation' id='prevDay' onclick='changeDay("prev")' style='left: 20px' alt="Previous day">
+                <button class='navigation' id='prevDay' onclick='changeDay("prev")' style='float: left' alt="Previous day">
                     <svg fill="currentColor" width="27.439888" height="46.538464" viewBox="0 0 6.5855731 11.169231" class="material-design-icon__svg" version="1.1" id="svg4" xmlns="http://www.w3.org/2000/svg" xmlns:svg="http://www.w3.org/2000/svg"><path id="rect339" style="fill:#000000;stroke-width:0.24" d="m 0.29262384,4.8829342 c -0.023631,0.02363 -0.04552,0.04831 -0.066291,0.07358 -0.301771,0.367127 -0.3017835,0.895728 1e-7,1.262848 0.010037,0.01221 0.02012,0.02429 0.030825,0.03613 7.37e-4,8.21e-4 0.00158,0.0015 0.00232,0.0023 0.01076,0.01183 0.021716,0.02371 0.033146,0.03514 4.435e-4,4.43e-4 8.817e-4,8.83e-4 0.00133,0.0013 4.401e-4,4.41e-4 8.847e-4,8.84e-4 0.00133,0.0013 L 4.8750159,10.875264 c 0.391955,0.391955 1.023364,0.391955 1.415319,0 0.391954,-0.391955 0.391623,-1.0230318 -3.32e-4,-1.4149868 L 2.4126182,5.5829692 6.2926449,1.7029422 c 0.39057,-0.3905697 0.390571,-1.01944594 1e-6,-1.41001544 -0.390569,-0.3905695 -1.019446,-0.3905692 -1.4100155,5e-7 L 0.29527554,4.8802822 Z" /></svg>
+                </button>
+                <span id="date-title" alt="Date"></span>
+                <button class="navigation" id="nextDay" onclick="changeDay('next')" style="float: right" alt="Next day">
+                    <svg fill="currentColor" width="27.439884" height="46.538464" viewBox="0 0 6.5855722 11.169231" class="material-design-icon__svg" version="1.1" id="svg4" xmlns="http://www.w3.org/2000/svg" xmlns:svg="http://www.w3.org/2000/svg"><path id="rect339" style="fill:#000000;stroke-width:0.24" d="m 6.2929489,6.2862962 c 0.02363,-0.02363 0.04552,-0.04831 0.06629,-0.07358 0.301771,-0.367127 0.301784,-0.895728 0,-1.262848 -0.01004,-0.01221 -0.02012,-0.02429 -0.03082,-0.03613 -7.37e-4,-8.21e-4 -0.0016,-0.0015 -0.0023,-0.0023 -0.01076,-0.01183 -0.02172,-0.02371 -0.03315,-0.03514 -4.44e-4,-4.43e-4 -8.82e-4,-8.83e-4 -0.0013,-0.0013 -4.4e-4,-4.41e-4 -8.85e-4,-8.84e-4 -0.0013,-0.0013 L 1.7105569,0.29396606 c -0.3919545,-0.391955 -1.02336346,-0.391955 -1.41531846,0 -0.391954,0.391955 -0.391623,1.02303204 3.32e-4,1.41498704 L 4.1729546,5.5862612 0.29292794,9.4662882 c -0.39057,0.39057 -0.390571,1.0194458 -10e-7,1.4100148 0.390569,0.39057 1.01944596,0.390569 1.41001546,0 L 6.2902969,6.2889482 Z" /></svg>
                 </button>
             </div>
             <!-- Divider -->
