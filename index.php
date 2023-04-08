@@ -18,7 +18,7 @@ error_reporting(E_ALL ^ E_NOTICE); // Ignore PHP notices
 ini_set('display_errors', 1);
 ini_set('display_startup_errors', 1);
 use om\IcalParser; // Include IcalParser library
-chdir(dirname($_SERVER["PHP_SELF"]));
+chdir(dirname(__FILE__));
 require_once './icalparser/EventsList.php';
 require_once './icalparser/Freq.php';
 require_once './icalparser/IcalParser.php';
