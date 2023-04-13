@@ -2,17 +2,12 @@
 header("Content-type: text/plain; charset=utf-8");
 // header("Content-Disposition: attachment; filename=weather.ics");
 
-// Set the timezone
-$timezone = "Europe/London"; date_default_timezone_set($timezone);
 // Location
 if (isset($_GET["city"])) {
     $city = $_GET["city"];
 } else {
     exit;
 }
-// Start & end date
-$startDate = new DateTime();
-$endDate = new DateTime("+7 Days");
 
 function dateToCal($dateString = "", $offset = "") {
     $date = new DateTime($dateString . $offset);
@@ -105,6 +100,10 @@ ini_set("display_startup_errors", 1);
 error_reporting(E_ALL);
 if (@fsockopen("api.open-meteo.com", 443)) {
     $geoCoder = json_decode(file_get_contents("https://geocoding-api.open-meteo.com/v1/search?count=1&name=" . rawurlencode($city)), true);
+    // Set the timezone
+    $timezone = $geoCoder["results"][0]["timezone"]; date_default_timezone_set($timezone);
+    $startDate = new DateTime();
+    $endDate = new DateTime("+7 Days");
     $weather = json_decode(file_get_contents("https://api.open-meteo.com/v1/forecast?latitude=" . $geoCoder["results"][0]["latitude"] .
                                 "&longitude=" . $geoCoder["results"][0]["longitude"] .
                                 "&daily=weathercode,temperature_2m_max,temperature_2m_min,sunrise,sunset,winddirection_10m_dominant&timezone=" . $timezone .
