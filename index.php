@@ -28,7 +28,7 @@ require_once './config.php';
 include './config.user.php';
 /**
  * Validate a date
- * @param DateTime $date
+ * @param string $date
  * @param string $format
  * @return bool
  */
@@ -71,6 +71,10 @@ if (isset($_GET['date'])) {
 // Offline mode
 if ($offline == true){
     $remote_urls = glob('calendars'.'/*');
+}
+
+if (isset($_GET['city'])) {
+    array_push($remote_urls, 'http' . (empty($_SERVER['HTTPS'])?'':'s') . '://' . $_SERVER['SERVER_NAME'] . dirname($_SERVER['PHP_SELF']) . '/weather.php?city=' . urlencode($_GET['city']));
 }
 ?>
 <!DOCTYPE html>
