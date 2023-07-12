@@ -1,12 +1,24 @@
-# Calendar
-### A simple PHP calendar for Kindle that parses an ICAL file
- 
-## <a name="config.php"></a>config.php
-* $remote_urls: To change the URLs for the calendar, simply edit config.php and add your URLs to this array.
-* $offline: Controls whether offline mode. If false, the calendar directly loads the URLs specifies every time the webpage is loaded. If true, it fetches all the calendars in ./calendars and loads it. Personally I set up a cron job (not a bj, it's a background job that runs by a set interval of time automatically) every 2 hours that runs update.php (see [below](#update.php)) and use the "offline mode".
+# Calendar for E-Ink
+**A simple PHP calendar optimised for e-ink displays**
 
-## <a name="update.php"></a>update.php
-Updates a locally cached version of the calendars. Simply open update.php and it places the urls from config.php into ./calendars
+Uses [IcalParser](https://github.com/OzzyCzech/icalparser) library by OzzyCzech
+![Alt text](Images/timetable.png)
+## <a name="weather"></a>☁️ [Weather.php](weather.php)
+* ☔ Shows a 7-day forecast, heavily inspired by [Weather in Your Calendar by @vejnoe](https://github.com/vejnoe/weather-in-your-calendar/tree/master)
+* 💻 Uses [Open-Meteo API](https://open-meteo.com/) for weather data & geocoding, no API key required!
+* __🗺 Use query string "?city=" to specify city__
 
-## Why did you make this?
-My Matron locks all laptops into the Prep Room during sports time so when the sport session starts early or ends late I would not be able to check my schedule for the day, which is stored on my NextCloud server. It was very annoying and I have to fetch the matron every time it happens. So I built a web app to show my schedule on a Kindle and started this project.
+## <a name="config"></a>⚙ [Config.php](config.php)
+* 🌍 __`$remote_urls`__: To add URLs, edit config.php and add your URLs array.
+* 🔗 __`$offline`__: Enables offline mode
+    * `False`: Loads directly from URLs every time
+    * `True`: Uses cached ics files from `./calendars/*`. Learn more about updating files [here](#update)
+
+## <a name="update"></a>⟳ [Update.php](update.php)
+Updates locally cached version of calendars. Load page with query string `?city=` to specify location for updating weather file. Use cron to automatically run script.
+
+* Run in terminal: `crontab -e`
+* Append: `0 */2 * * * php -f $HOME/www/html/calendar/update.php` (or whatever is your path to file)
+
+## Contribution
+As a full time student I don't really maintain this project much, but please feel free to submit pull requests

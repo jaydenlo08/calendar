@@ -6,9 +6,13 @@ header("Content-type: text/plain; charset=utf-8");
 if (isset($_GET["city"])) {
     $city = $_GET["city"];
 } else {
+    print("BEGIN:VCALENDAR\nVERSION:2.0\nPRODID:-//jaydenlo08/JCalendar//EN\nEND:VCALENDAR");
     exit;
 }
-
+function endCal() {
+    print("END:VCALENDAR");
+    exit;
+}
 function dateToCal($dateString = "", $offset = "") {
     $date = new DateTime($dateString . $offset);
     return $date->format("Ymd");
@@ -101,7 +105,10 @@ error_reporting(E_ALL);
 if (@fsockopen("api.open-meteo.com", 443)) {
     $geoCoder = json_decode(file_get_contents("https://geocoding-api.open-meteo.com/v1/search?count=1&name=" . rawurlencode($city)), true);
     // Set the timezone
-    $timezone = $geoCoder["results"][0]["timezone"]; date_default_timezone_set($timezone);
+    if (isset($geoCoder["results"])) {
+        $timezone = $geoCoder["results"][0]["timezone"];
+    } else endCal();
+    date_default_timezone_set($timezone);
     $startDate = new DateTime();
     $endDate = new DateTime("+7 Days");
     $weather = json_decode(file_get_contents("https://api.open-meteo.com/v1/forecast?latitude=" . $geoCoder["results"][0]["latitude"] .
