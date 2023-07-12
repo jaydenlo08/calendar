@@ -20,5 +20,5 @@ Updates locally cached version of calendars. Load page with query string `?city=
 * Run in terminal: `crontab -e`
 * Append: `0 */2 * * * php -f $HOME/www/html/calendar/update.php` (or whatever is your path to file)
 
-## Contribution
-As a full time student I don't really maintain this project much, but please feel free to submit pull requests
+## <a name="contributing"></a> 🤝🏻 Contributing
+As a full time student I don't really maintain this project much, but please feel free to submit issues / pull requests
